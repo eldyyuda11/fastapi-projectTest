@@ -1,7 +1,10 @@
+from ast import If
+from tokenize import Double
 from fastapi import FastAPI, Path
 from typing import Optional
 from pydantic import BaseModel
 import uvicorn
+import math
 
 app = FastAPI()
 
@@ -25,14 +28,36 @@ class UpdateStudent(BaseModel):
     
 @app.get("/index")
 def index():
-    return [
-        {"lama_dering": 5,
-            "jenis_dering" : "sedang"},
+    return {
+        "data" : [
+        {
+            "lama_dering": 5,
+            "jenis_dering" : "sedang"
+        },
         {
             "lama_dering" : 12,
             "jenis_dering": "lama"
-        }]
+        }
+        ]
+        }
 
+
+# @app.get("/KBDI")
+# def KBDI(KBDItMin:Double,DF:Double,RT):
+#     if(RT>=5.1): 
+#         if(RT == ):
+#             return RT-5.1
+#     elif(RT<5.1):
+#         RFResult = 0
+#         return RFResult     
+
+
+#     KBDI =  KBDItMin+DF-RF
+#     return KBDI
+
+
+    
+    
 @app.get("/get-student/{student_id}")
 def getStudent(student_id:int = Path(None, description="Student ID", gt=0,lt=3)):
     if student_id not in students:
