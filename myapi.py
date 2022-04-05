@@ -14,18 +14,12 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 
-
-app = FastAPI()
-
 DATABASE_URL = "postgresql://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d71f184ebea87b10d80c6c84985bd@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfml4uo4pr3mme"
 
 database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
-engine  = sqlalchemy.create_engine(DATABASE_URL)
-metadata.create_all(engine)
-
-drought_factors = sqlalchemy.Table(
+drought_factorsToday = sqlalchemy.Table(
     "drought_factorsToday",
     metadata,
     sqlalchemy.Column("id_faktor", sqlalchemy.Integer, primary_key=True),
@@ -55,6 +49,11 @@ results_today = sqlalchemy.Table(
     sqlalchemy.Column("faktor_hujanToday", sqlalchemy.Float, nullable=True),
 )
 
+engine  = sqlalchemy.create_engine(DATABASE_URL)
+metadata.create_all(engine)
+
+
+
 class result_today(BaseModel):
     id_results_today: int
     kbdi_today: Optional[float]= None
@@ -83,6 +82,7 @@ class drought_factorTodayIn(BaseModel):
     avg_annualrain: Optional[float] = None
     water_layer: Optional[float] = None
     time: Optional[float] = None
+app = FastAPI()
 
 @app.on_event("startup")
 async def startup():
@@ -94,15 +94,14 @@ async def shutdown():
 
 @app.get("/drought_factorsToday/" , response_model=List[drought_factorToday])
 async def read_drought_factorsToday():
-    query = drought_factors.select()
+    query = drought_factorsToday.select()
     return await database.fetch_all(query)
 
-
 @app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
-async def create_drought_factorsToday(drought_factorToday:drought_factorTodayIn):
-    query = drought_factors.insert().values(maks_temp = drought_factorToday.maks_temp,avg_annualrain=drought_factorToday.avg_annualrain,water_layer=drought_factorToday.water_layer,time=drought_factorToday.time)
+async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
+    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=drought_factor.time)
     last_record_id = await database.execute(query)
-    return {**drought_factorToday.dict(),"id_faktor": last_record_id}
+    return {**drought_factor.dict(),"id_faktor": last_record_id}
 
 
 students ={
