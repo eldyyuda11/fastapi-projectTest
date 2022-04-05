@@ -91,12 +91,13 @@ async def shutdown():
 
 @app.get("/drought_factorsToday/" , response_model=List[drought_factorToday])
 async def read_drought_factorsToday():
-    return await database.fetch_all(drought_factors.select())
+    query = drought_factors.select()
+    return await database.fetch_all(query)
 
 
 @app.post("/drought_factorsToday/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factorToday:drought_factorTodayIn):
-    query = drought_factors.insert().values(maks_temp=drought_factors.maks_temp,avg_annualrain=drought_factors.avg_annualrain,water_layer=drought_factors.water_layer,time=drought_factors.time)
+    query = drought_factors.insert().values(maks_temp = drought_factorToday.maks_temp,avg_annualrain=drought_factorToday.avg_annualrain,water_layer=drought_factorToday.water_layer,time=drought_factorToday.time)
     last_record_id = await database.execute(query)
     return {**drought_factorToday.dict(),'id_faktor': last_record_id}
 
