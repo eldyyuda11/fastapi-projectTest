@@ -5,7 +5,7 @@ from fastapi import FastAPI, Path
 from typing import Optional
 from typing import List 
 from pydantic import BaseModel
-from databases import Database
+import databases
 import uvicorn
 import math
 import sqlalchemy
@@ -19,7 +19,7 @@ app = FastAPI()
 
 DATABASE_URL = "postgresql://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d71f184ebea87b10d80c6c84985bd@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfml4uo4pr3mme"
 
-database = Database(DATABASE_URL)
+database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
 engine  = sqlalchemy.create_engine(DATABASE_URL)
