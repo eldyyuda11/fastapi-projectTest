@@ -98,7 +98,7 @@ async def read_drought_factorsToday():
     return await database.fetch_all(query)
 
 
-@app.post("/drought_factorsToday/", response_model=drought_factorToday)
+@app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factorToday:drought_factorTodayIn):
     query = drought_factors.insert().values(maks_temp = drought_factorToday.maks_temp,avg_annualrain=drought_factorToday.avg_annualrain,water_layer=drought_factorToday.water_layer,time=drought_factorToday.time)
     last_record_id = await database.execute(query)
