@@ -129,7 +129,7 @@ class UpdateStudent(BaseModel):
 
 
     
-@app.get("/index")
+@app.get("/")
 async def index():
     return {
         "data" : [
@@ -172,7 +172,7 @@ async def getStudent(student_id:int = Path(None, description="Student ID", gt=0,
     return students[student_id]
 
 @app.get("/get-by-name/{student_id}")
-async def get_student(*, student_id : int, name : Optional[str] = None, test : int):
+async def get_student(*, student_id : int, name : Optional[str] = None):
     for student_id in students:
         if students[student_id]['name'] == name:
             return students[student_id]
