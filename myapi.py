@@ -17,7 +17,7 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-DATABASE_URL = "postgresql://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d71f184ebea87b10d80c6c84985bd@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfml4uo4pr3mme"
+DATABASE_URL = "postgres://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d71f184ebea87b10d80c6c84985bd@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfml4uo4pr3mme"
 
 database = Database(DATABASE_URL)
 
@@ -102,7 +102,7 @@ async def read_drought_factorsToday():
 async def create_drought_factorsToday(drought_factorToday:drought_factorTodayIn):
     query = drought_factors.insert().values(maks_temp = drought_factorToday.maks_temp,avg_annualrain=drought_factorToday.avg_annualrain,water_layer=drought_factorToday.water_layer,time=drought_factorToday.time)
     last_record_id = await database.execute(query)
-    return {**drought_factorToday.dict(),'id_faktor': last_record_id}
+    return {**drought_factorToday.dict(),"id_faktor": last_record_id}
 
 
 students ={
