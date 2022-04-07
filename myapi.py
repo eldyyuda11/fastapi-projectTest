@@ -166,7 +166,7 @@ async def shutdown():
 
 # def KBDI(KBDI_sbmnya:result_yesterday,df:drought_factorToday):
 
-@app.post("/input_todaydata", response_model=List[input_today])
+@app.post("/input_todaydata", response_model=input_today)
 async def create_input_today(it: input_todayIn):
     query = inputs_today.insert().values(curah_hujan=it.curah_hujan)
     last_record_id = await database.fetch_val(query)
@@ -182,7 +182,7 @@ async def read_drought_factorsToday():
     query = drought_factorsToday.select()
     return await database.fetch_all(query)
 
-@app.post("/drought_factorsTodayInsert/", response_model=List[drought_factorToday])
+@app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
     timeNow = datetime.datetime.now()
     query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer)
