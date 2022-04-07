@@ -104,57 +104,57 @@ class input_todayIn(BaseModel):
 
 app = FastAPI()
 
-timetoday=""
-TMAField1={}
-TMAField2={}
-TMAField3={}
-TMAField4={}
-TMAField5={}
-TMAField6={}
-TMAField7={}
-TMAField8={}
-TMAField9={}
-SuhuHField1={}
-SuhuHField2={}
-SuhuHField3={}
-SuhuHField4={}
-SuhuHField5={}
-SuhuHField6={}
-SuhuHField7={}
-SuhuHField8={}
-SuhuHField9={}
-def job():
-    global timetoday
-    timetoday = datetime.now()
+# timetoday=""
+# TMAField1={}
+# TMAField2={}
+# TMAField3={}
+# TMAField4={}
+# TMAField5={}
+# TMAField6={}
+# TMAField7={}
+# TMAField8={}
+# TMAField9={}
+# SuhuHField1={}
+# SuhuHField2={}
+# SuhuHField3={}
+# SuhuHField4={}
+# SuhuHField5={}
+# SuhuHField6={}
+# SuhuHField7={}
+# SuhuHField8={}
+# SuhuHField9={}
+# def job():
+#     global timetoday
+#     timetoday = datetime.now()
 
-schedule.every().day.at("00:01").do(job)
+# schedule.every().day.at("00:01").do(job)
 
-def jobSuhuTMA():
-    global TMAField1
-    global TMAField2
-    global TMAField3
-    global TMAField4 
-    global TMAField5
-    global TMAField6
-    global TMAField7
-    global TMAField8
-    global TMAField9
-    global SuhuHField1
-    global SuhuHField2
-    global SuhuHField3
-    global SuhuHField4
-    global SuhuHField5
-    global SuhuHField6
-    global SuhuHField7
-    global SuhuHField8
-    global SuhuHField9
-    TMAField2 = requests.get("https://api.thingspeak.com/channels/1522263/fields/2.json?api_key=XUFKUIBLFK2IZMT2&results=2")
-    TMAField2 = TMAField2.json()['feeds'][-1]['field2']
+# def jobSuhuTMA():
+#     global TMAField1
+#     global TMAField2
+#     global TMAField3
+#     global TMAField4 
+#     global TMAField5
+#     global TMAField6
+#     global TMAField7
+#     global TMAField8
+#     global TMAField9
+#     global SuhuHField1
+#     global SuhuHField2
+#     global SuhuHField3
+#     global SuhuHField4
+#     global SuhuHField5
+#     global SuhuHField6
+#     global SuhuHField7
+#     global SuhuHField8
+#     global SuhuHField9
+#     TMAField2 = requests.get("https://api.thingspeak.com/channels/1522263/fields/2.json?api_key=XUFKUIBLFK2IZMT2&results=2")
+#     TMAField2 = TMAField2.json()['feeds'][-1]['field2']
 
-schedule.every().day.at("23:55").do(jobSuhuTMA)
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
+# schedule.every().day.at("23:55").do(jobSuhuTMA)
+# while 1:
+#     schedule.run_pending()
+#     time.sleep(1)
 
 @app.on_event("startup")
 async def startup():
