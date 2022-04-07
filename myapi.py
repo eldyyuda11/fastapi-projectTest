@@ -1,4 +1,5 @@
 from ast import If
+from datetime import datetime
 from importlib.metadata import metadata
 from tokenize import Double
 from fastapi import FastAPI, Path
@@ -12,6 +13,10 @@ import sqlalchemy
 from urllib import response
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+import schedule
+import time
+import urllib.request
+import requests
 
 
 DATABASE_URL = "postgresql://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d71f184ebea87b10d80c6c84985bd@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfml4uo4pr3mme"
@@ -27,7 +32,9 @@ drought_factorsToday = sqlalchemy.Table(
     sqlalchemy.Column("avg_annualrain", sqlalchemy.Float,nullable=True),
     sqlalchemy.Column("water_layer", sqlalchemy.Float,nullable=True),
     sqlalchemy.Column("time", sqlalchemy.Float,nullable=True),
+    sqlalchemy.Column("tinggi muka air", sqlalchemy.Float,nullable=True),
 )
+
 results_yesterday = sqlalchemy.Table(
     "results_yesterday",
     metadata,
@@ -49,11 +56,16 @@ results_today = sqlalchemy.Table(
     sqlalchemy.Column("faktor_hujanToday", sqlalchemy.Float, nullable=True),
 )
 
+inputs_today = sqlalchemy.Table(
+    "inputs_today",
+    metadata,
+    sqlalchemy.Column("id_inputs_today", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("curah_hujan", sqlalchemy.Float,nullable=True),
+)
 engine  = sqlalchemy.create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
-
-
+# model  
 class result_today(BaseModel):
     id_results_today: int
     kbdi_today: Optional[float]= None
@@ -61,7 +73,6 @@ class result_today(BaseModel):
     faktor_kekeringanToday: Optional[float] = None 
     curahHujan_today: Optional[float] = None
     faktor_hujanToday: Optional[float] = None
-
 
 class result_yesterday(BaseModel):
     id_results_yesterday: int
@@ -81,8 +92,80 @@ class drought_factorTodayIn(BaseModel):
     maks_temp: Optional[float]= None
     avg_annualrain: Optional[float] = None
     water_layer: Optional[float] = None
-    time: Optional[float] = None
+    time: Optional[datetime] = None
+
+class input_today(BaseModel):
+    id_inputs_today: int
+    curah_hujan: Optional[float]= None
+
+class input_todayIn(BaseModel):
+    curah_hujan: Optional[float]= None
+
 app = FastAPI()
+
+timetoday=""
+TMAField1={}
+TMAField2={}
+TMAField3={}
+
+TMAField4={}
+TMAField5={}
+TMAField6={}
+
+TMAField7={}
+TMAField8={}
+TMAField9={}
+
+SuhuHField1={}
+SuhuHField2={}
+SuhuHField3={}
+
+SuhuHField4={}
+SuhuHField5={}
+SuhuHField6={}
+
+SuhuHField7={}
+SuhuHField8={}
+SuhuHField9={}
+
+def job():
+    global timetoday
+    timetoday = datetime.now()
+
+schedule.every().day.at("00:01").do(job)
+
+def jobSuhuTMA():
+    global TMAField1
+    global TMAField2
+    global TMAField3
+
+    global TMAField4 
+    global TMAField5
+    global TMAField6
+
+    global TMAField7
+    global TMAField8
+    global TMAField9
+
+    global SuhuHField1
+    global SuhuHField2
+    global SuhuHField3
+
+    global SuhuHField4
+    global SuhuHField5
+    global SuhuHField6
+
+    global SuhuHField7
+    global SuhuHField8
+    global SuhuHField9
+
+    TMAField2=requests.get("https://api.thingspeak.com/channels/1522263/fields/2.json?api_key=XUFKUIBLFK2IZMT2&results=2")
+    TMAField2=TMAField2.json()['feeds'][-1]['field2']
+
+schedule.every().day.at("23:55").do(jobSuhuTMA)
+while 1:
+    schedule.run_pending()
+    time.sleep(1)
 
 @app.on_event("startup")
 async def startup():
@@ -91,6 +174,20 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await database.disconnect()
+
+
+# def KBDI(KBDI_sbmnya:result_yesterday,df:drought_factorToday):
+
+@app.post("/input_today", response_model=List[input_today])
+async def create_input_today(input_today: input_todayIn):
+    query = input_today.insert().values(curah_hujan=input_today.curah_hujan)
+    last_record_id = await database.fetch_val(query)
+    return {**input_today.dict(),"id_inputs_today": last_record_id}
+
+@app.get("/getdatacurahhujan", response_model=List[input_today])
+async def getCurahhujan(input_today : input_today):
+    query = drought_factorsToday.select().max(input_today.curah_hujan)
+    return await database.fetch_all(query)
 
 @app.get("/drought_factorsToday/" , response_model=List[drought_factorToday])
 async def read_drought_factorsToday():
@@ -101,9 +198,20 @@ async def read_drought_factorsToday():
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
     query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=drought_factor.time)
     last_record_id = await database.execute(query)
-    return {**drought_factor.dict(),"id_faktor": last_record_id}
+    return {**drought_factor.dict(),"id_faktor": last_record_id}    
+
+@app.get("/KBDI", response_model=List[result_today])
+async def read_KBDI():
+    query = results_today.select()
+    return await database.fetch_all(query)
+
+# class Kbdi(BaseModel):
+#     vegetasi : Optional[str] = None
+#     suhuMaks : Optional[float] = None
+#     curahHujan : Optional[float] = None
 
 
+# contoh
 students ={
     1:{
         "name":"John",
@@ -111,10 +219,6 @@ students ={
         "year" : "12th"
     }
 }
-# class Kbdi(BaseModel):
-#     vegetasi : Optional[str] = None
-#     suhuMaks : Optional[float] = None
-#     curahHujan : Optional[float] = None
 
 class Student(BaseModel):
     name : str
@@ -126,8 +230,23 @@ class UpdateStudent(BaseModel):
     age : Optional[int] = None
     year : Optional[str] = None
 
+#  Koefisien vegetasi 
+R0ElninoARapat = 0.6225
+R0ElninoCRapat = 5.34
+R0ARapat = 0.4386
+R0CRapat = 0.5
 
-    
+R0ElninoASedang = 0.8300
+R0ElninoCSedang = 7.13
+R0ASedang = 0.5848
+R0CSedang = 5.02
+
+R0ElninoANon = 0.8300
+R0ElninoCNon = 7.13
+R0ANon = 0.5848
+R0CNon = 5.02
+#end
+
 @app.get("/")
 async def index():
     return {
@@ -142,6 +261,7 @@ async def index():
         }
         ]
     }
+
 # @app.post("/index/post")
 # async def create_Kbdi(Kbdi: Kbdi):
 #     return Kbdi
