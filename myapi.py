@@ -107,27 +107,21 @@ timetoday=""
 TMAField1={}
 TMAField2={}
 TMAField3={}
-
 TMAField4={}
 TMAField5={}
 TMAField6={}
-
 TMAField7={}
 TMAField8={}
 TMAField9={}
-
 SuhuHField1={}
 SuhuHField2={}
 SuhuHField3={}
-
 SuhuHField4={}
 SuhuHField5={}
 SuhuHField6={}
-
 SuhuHField7={}
 SuhuHField8={}
 SuhuHField9={}
-
 def job():
     global timetoday
     timetoday = datetime.now()
@@ -138,29 +132,23 @@ def jobSuhuTMA():
     global TMAField1
     global TMAField2
     global TMAField3
-
     global TMAField4 
     global TMAField5
     global TMAField6
-
     global TMAField7
     global TMAField8
     global TMAField9
-
     global SuhuHField1
     global SuhuHField2
     global SuhuHField3
-
     global SuhuHField4
     global SuhuHField5
     global SuhuHField6
-
     global SuhuHField7
     global SuhuHField8
     global SuhuHField9
-
-    TMAField2=requests.get("https://api.thingspeak.com/channels/1522263/fields/2.json?api_key=XUFKUIBLFK2IZMT2&results=2")
-    TMAField2=TMAField2.json()['feeds'][-1]['field2']
+    TMAField2 = requests.get("https://api.thingspeak.com/channels/1522263/fields/2.json?api_key=XUFKUIBLFK2IZMT2&results=2")
+    TMAField2 = TMAField2.json()['feeds'][-1]['field2']
 
 schedule.every().day.at("23:55").do(jobSuhuTMA)
 while 1:
@@ -283,52 +271,52 @@ async def index():
 
      
     
-@app.get("/get-student/{student_id}")
-async def getStudent(student_id:int = Path(None, description="Student ID", gt=0,lt=3)):
-    if student_id not in students:
-        return {"error": "Student not found"}
+# @app.get("/get-student/{student_id}")
+# async def getStudent(student_id:int = Path(None, description="Student ID", gt=0,lt=3)):
+#     if student_id not in students:
+#         return {"error": "Student not found"}
     
-    return students[student_id]
+#     return students[student_id]
 
-@app.get("/get-by-name/{student_id}")
-async def get_student(*, student_id : int, name : Optional[str] = None):
-    for student_id in students:
-        if students[student_id]['name'] == name:
-            return students[student_id]
-    return {"message": "Student not found"}
+# @app.get("/get-by-name/{student_id}")
+# async def get_student(*, student_id : int, name : Optional[str] = None):
+#     for student_id in students:
+#         if students[student_id]['name'] == name:
+#             return students[student_id]
+#     return {"message": "Student not found"}
     
-@app.post("/add-student/{student_id}")
-async def add_student(student_id:int, student: Student):
-    if student_id in students:
-        return {"message": "Student already exists"}
+# @app.post("/add-student/{student_id}")
+# async def add_student(student_id:int, student: Student):
+#     if student_id in students:
+#         return {"message": "Student already exists"}
     
-    students[student_id] = student
-    return students[student_id]
+#     students[student_id] = student
+#     return students[student_id]
 
-@app.put("/update-student/{student_id}")
-async def update_student(student_id:int, student: UpdateStudent):
-    if student_id not in students:
-        return {"message": "Student not found"}
+# @app.put("/update-student/{student_id}")
+# async def update_student(student_id:int, student: UpdateStudent):
+#     if student_id not in students:
+#         return {"message": "Student not found"}
     
-    if student.name != None:
-        students[student_id].name = student.name
+#     if student.name != None:
+#         students[student_id].name = student.name
         
-    if student.age != None:
-        students[student_id].age = student.age
+#     if student.age != None:
+#         students[student_id].age = student.age
         
-    if student.year != None:
-        students[student_id].year = student.year
+#     if student.year != None:
+#         students[student_id].year = student.year
     
-    return students[student_id]
+#     return students[student_id]
     
-@app.delete("/delete-student/{student_id}")
-async def delete_student(student_id:int):
-    if student_id not in students:
-        return {"message": "Student not found"}
+# @app.delete("/delete-student/{student_id}")
+# async def delete_student(student_id:int):
+#     if student_id not in students:
+#         return {"message": "Student not found"}
     
-    del students[student_id]
-    return {"message": "Student deleted"}
+#     del students[student_id]
+#     return {"message": "Student deleted"}
 
-@app.get("/get-students-all")
-async def get_students():
-    return students
+# @app.get("/get-students-all")
+# async def get_students():
+#     return students
