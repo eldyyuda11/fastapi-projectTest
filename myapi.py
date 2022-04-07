@@ -168,10 +168,10 @@ async def shutdown():
 # def KBDI(KBDI_sbmnya:result_yesterday,df:drought_factorToday):
 
 @app.post("/input_today", response_model=List[input_today])
-async def create_input_today(input_today: input_todayIn):
-    query = input_today.insert().values(curah_hujan=input_today.curah_hujan)
+async def create_input_today(it: input_todayIn):
+    query = it.insert().values(curah_hujan=it.curah_hujan)
     last_record_id = await database.fetch_val(query)
-    return {**input_today.dict(),"id_inputs_today": last_record_id}
+    return {**it.dict(),"id_inputs_today": last_record_id}
 
 @app.get("/getdatacurahhujan", response_model=List[input_today])
 async def getCurahhujan(input_today : input_today):
