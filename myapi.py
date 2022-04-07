@@ -87,7 +87,7 @@ class drought_factorToday(BaseModel):
     maks_temp: Optional[float]= None
     avg_annualrain: Optional[float] = None
     water_layer: Optional[float] = None
-    time: Optional[float] = None
+    time: Optional[datetime] = None
 
 class drought_factorTodayIn(BaseModel):
     maks_temp: Optional[float]= None
