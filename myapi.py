@@ -24,6 +24,7 @@ DATABASE_URL = "postgresql://odmumcfpcfknmp:25e49faabdb52bb57b119eb3718c0657ea9d
 database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
+
 drought_factorsToday = sqlalchemy.Table(
     "drought_factorsToday",
     metadata,
