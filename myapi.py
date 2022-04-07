@@ -1,5 +1,5 @@
 from ast import If
-from datetime import datetime
+from datetime import date, datetime
 from importlib.metadata import metadata
 from tokenize import Double
 from fastapi import FastAPI, Path
@@ -93,7 +93,7 @@ class drought_factorTodayIn(BaseModel):
     maks_temp: Optional[float]= None
     avg_annualrain: Optional[float] = None
     water_layer: Optional[float] = None
-    time: Optional[datetime] = None
+    time: Optional[str] = None
 
 class input_today(BaseModel):
     id_inputs_today: int
@@ -185,7 +185,8 @@ async def read_drought_factorsToday():
 
 @app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
-    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=drought_factor.time)
+    timeNow = datetime.datetime.now()
+    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=timeNow)
     last_record_id = await database.execute(query)
     return {**drought_factor.dict(),"id_faktor": last_record_id}    
 
