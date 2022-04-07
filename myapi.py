@@ -169,7 +169,7 @@ async def shutdown():
 
 @app.post("/input_today", response_model=List[input_today])
 async def create_input_today(it: input_todayIn):
-    query = it.insert().values(curah_hujan=it.curah_hujan)
+    query = inputs_today.insert().values(curah_hujan=it.curah_hujan)
     last_record_id = await database.fetch_val(query)
     return {**it.dict(),"id_inputs_today": last_record_id}
 
