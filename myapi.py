@@ -166,15 +166,15 @@ async def shutdown():
 
 # def KBDI(KBDI_sbmnya:result_yesterday,df:drought_factorToday):
 
-@app.post("/input_today", response_model=List[input_today])
+@app.post("/input_todaydata", response_model=List[input_today])
 async def create_input_today(it: input_todayIn):
     query = inputs_today.insert().values(curah_hujan=it.curah_hujan)
     last_record_id = await database.fetch_val(query)
     return {**it.dict(),"id_inputs_today": last_record_id}
 
 @app.get("/getdatacurahhujan", response_model=List[input_today])
-async def getCurahhujan(input_today : input_today):
-    query = drought_factorsToday.select().max(input_today.curah_hujan)
+async def getCurahhujan():
+    query = drought_factorsToday.select().max(drought_factorsToday.curah_hujan)
     return await database.fetch_all(query)
 
 @app.get("/drought_factorsToday/" , response_model=List[drought_factorToday])
@@ -185,7 +185,7 @@ async def read_drought_factorsToday():
 @app.post("/drought_factorsTodayInsert/", response_model=List[drought_factorToday])
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
     timeNow = datetime.datetime.now()
-    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=timeNow)
+    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer)
     last_record_id = await database.execute(query)
     return {**drought_factor.dict(),"id_faktor": last_record_id,"time":timeNow}    
 
