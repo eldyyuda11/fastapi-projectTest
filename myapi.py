@@ -43,7 +43,7 @@ results_yesterday = sqlalchemy.Table(
     sqlalchemy.Column("kbdi_sebelumnya", sqlalchemy.Float, nullable=True),
     sqlalchemy.Column("temp_sebelumnnya", sqlalchemy.Float, nullable=True),
     sqlalchemy.Column("faktorKekeringan_sebelumnnya", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("curahHujan_sebelumnya", sqlalchemy.Float, nullable=True),
+    sqlalchemy.Column("curahHujan_sebelumnya", sqlalchemy.Float, nullable=True), 
     )
 
 results_today = sqlalchemy.Table(
@@ -174,7 +174,7 @@ async def create_input_today(it: input_todayIn):
 
 @app.get("/getdatacurahhujan", response_model=List[input_today])
 async def getCurahhujan():
-    query = drought_factorsToday.select().max(drought_factorsToday.curah_hujan)
+    query = drought_factorsToday.select()
     return await database.fetch_all(query)
 
 @app.get("/drought_factorsToday/" , response_model=List[drought_factorToday])
@@ -184,7 +184,7 @@ async def read_drought_factorsToday():
 
 @app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
-    timeNow = datetime.datetime.now()
+    timeNow = datetime.now()
     query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer)
     last_record_id = await database.execute(query)
     return {**drought_factor.dict(),"id_faktor": last_record_id,"time":timeNow}    
