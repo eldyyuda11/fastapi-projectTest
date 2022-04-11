@@ -32,7 +32,7 @@ drought_factorsToday = sqlalchemy.Table(
     sqlalchemy.Column("maks_temp", sqlalchemy.Float,nullable=True),
     sqlalchemy.Column("avg_annualrain", sqlalchemy.Float,nullable=True),
     sqlalchemy.Column("water_layer", sqlalchemy.Float,nullable=True),
-    sqlalchemy.Column("time", sqlalchemy.Float,nullable=True),
+    sqlalchemy.Column("time", sqlalchemy.DateTime,nullable=True),
     sqlalchemy.Column("tinggi muka air", sqlalchemy.Float,nullable=True),
 )
 
