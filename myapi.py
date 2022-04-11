@@ -185,9 +185,9 @@ async def read_drought_factorsToday():
 @app.post("/drought_factorsTodayInsert/", response_model=drought_factorToday)
 async def create_drought_factorsToday(drought_factor :drought_factorTodayIn):
     timeNow = datetime.now()
-    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer)
+    query = drought_factorsToday.insert().values(maks_temp = drought_factor.maks_temp,avg_annualrain=drought_factor.avg_annualrain,water_layer=drought_factor.water_layer,time=timeNow)
     last_record_id = await database.execute(query)
-    return {**drought_factor.dict(),"id_faktor": last_record_id,"time":timeNow}    
+    return {**drought_factor.dict(),"id_faktor": last_record_id}    
 
 @app.get("/KBDI", response_model=List[result_today])
 async def read_KBDI():
